@@ -1,0 +1,249 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyODgYvQZkuqH0ZuAkTCnt7j",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/kh408623-art/1MIS2800/blob/main/Hamparian_Prep3\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 5,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "7d-vRRUibHGg",
+        "outputId": "1066656d-00e5-4d9d-f238-8ea0450241df"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Database connected successfully\n"
+          ]
+        }
+      ],
+      "source": [
+        "import sqlite3\n",
+        "\n",
+        "#Connect to (or create) the database\n",
+        "conn = sqlite3.connect('NFL_Scouting.db')\n",
+        "#Create a Cursor Object to run SQL Commands\n",
+        "cursor = conn.cursor()\n",
+        "print(\"Database connected successfully\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Create Scouting_stats table\n",
+        "cursor.execute(\"\"\"\n",
+        "CREATE TABLE IF NOT EXISTS scouting_stats (\n",
+        "  team_name TEXT,\n",
+        "  wins INTEGER,\n",
+        "  points_per_game REAL\n",
+        "  )\n",
+        "  \"\"\")\n",
+        "conn.commit()\n",
+        "print(\"Table created successfully\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "na6h0Re4btMX",
+        "outputId": "5ef10eea-b620-42ed-e2d1-dcca2596789e"
+      },
+      "execution_count": 6,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Table created successfully\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Insert sample NFL team data\n",
+        "cursor.execute(\"\"\"\n",
+        "INSERT INTO scouting_stats (team_name, wins, points_per_game)\n",
+        "VALUES\n",
+        "  ('Chiefs', 11, 29.2),\n",
+        "  ('Bills', 10, 26.5),\n",
+        "  ('Cowboys', 12, 27.8),\n",
+        "  ('Jets', 7, 18.6)\n",
+        "\"\"\")\n",
+        "conn.commit()\n",
+        "print(\"Data inserted successfully\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ZuJ1L1nMcOpQ",
+        "outputId": "c0ece586-1654-4227-c0f3-169aea9b5d21"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Data inserted successfully\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cursor.execute(\"\"\"\n",
+        "SELECT * FROM scouting_stats\n",
+        "WHERE points_per_game > 24\n",
+        "\"\"\")\n",
+        "results = cursor.fetchall()\n",
+        "print(\"Teams averaging more than 24 points per game:\")\n",
+        "for row in results:\n",
+        "  print(row)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9EkW4FNwdCXC",
+        "outputId": "e7ecfc2f-f5ae-422a-93d9-171e112ca867"
+      },
+      "execution_count": 9,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Teams averaging more than 24 points per game:\n",
+            "('Chiefs', 11, 29.2)\n",
+            "('Bills', 10, 26.5)\n",
+            "('Cowboys', 12, 27.8)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cursor.execute(\"\"\"\n",
+        "SELECT * FROM scouting_stats\n",
+        "ORDER BY wins DESC\n",
+        "\"\"\")\n",
+        "results = cursor.fetchall()\n",
+        "print(\"Teams sorted by wins (highest to lowest):\")\n",
+        "for row in results:\n",
+        "  print(row)\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "JlBJy8gKdemS",
+        "outputId": "6b934016-a504-4f4e-e182-f713913a7d49"
+      },
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Teams sorted by wins (highest to lowest):\n",
+            "('Cowboys', 12, 27.8)\n",
+            "('Chiefs', 11, 29.2)\n",
+            "('Bills', 10, 26.5)\n",
+            "('Jets', 7, 18.6)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cursor.execute(\"\"\"\n",
+        "SELECT * FROM scouting_stats\n",
+        "WHERE wins > 5\n",
+        "\"\"\")\n",
+        "results = cursor.fetchall()\n",
+        "print(\"Teams with more than 5 wins:\")\n",
+        "for row in results:\n",
+        "  print(row)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "-FBRDgkwdwzp",
+        "outputId": "e357f9f8-aa45-4e97-8e8c-c17b989b5772"
+      },
+      "execution_count": 12,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Teams with more than 5 wins:\n",
+            "('Chiefs', 11, 29.2)\n",
+            "('Bills', 10, 26.5)\n",
+            "('Cowboys', 12, 27.8)\n",
+            "('Jets', 7, 18.6)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "conn.close()\n",
+        "print(\"database connection closed\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4tytFXbgeRCc",
+        "outputId": "e90663b2-9f58-446b-91ec-3e8adbef4cf8"
+      },
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "database connection closed\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
